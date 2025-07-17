@@ -21,4 +21,5 @@ from myapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.scrape_view, name='scrape_view'),
+    path('delete/', views.clear, name="clear")
 ]

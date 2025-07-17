@@ -2,35 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Links</title>
+    <title>Scraped Links</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Optional: Bootstrap JS Bundle (includes Popper) -->
+    <!-- Bootstrap JS (optional) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <div class="container mt-5">
-        <h2 class="mb-4">Scraped Links</h2>
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Link</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for link in data %}
-                <tr>
-                    <td>{{ link.id }}</td>
-                    <td>{{ link.name }}</td>
-                    <td><a href="{{ link.address }}" target="_blank">{{ link.address }}</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <!-- Form Section -->
+        <div class="row">
+            <div class="col-md-8">
+                <form method="post" action="/">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="siteInput" class="form-label">Enter Website URL</label>
+                        <input type="text" class="form-control" id="siteInput" name="site" placeholder="https://example.com" required>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" name="action" value="scrape" class="btn btn-primary">Scrape</button>
+                        <button type="submit" name="action" value="delete" class="btn btn-danger" onclick="return confirm('Delete all scraped links?');">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Links Table -->
+        {% if data %}
+        <div class="row mt-5">
+            <div class="col-md-10">
+                <h2>Scraped Links</h2>
+                <table class="table table-bordered table-striped mt-3">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for link in data %}
+                        <tr>
+                            <td>{{ link.id }}</td>
+                            <td>{{ link.name }}</td>
+                            <td><a href="{{ link.address }}" target="_blank">{{ link.address }}</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="alert alert-info mt-4" role="alert">
+            No links available. Submit a URL to begin scraping.
+        </div>
+        {% endif %}
     </div>
 </body>
 </html>
